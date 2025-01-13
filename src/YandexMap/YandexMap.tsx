@@ -2,8 +2,8 @@ import React, {useState} from "react";
 import {Map, Placemark, YMaps} from "@pbe/react-yandex-maps";
 
 interface YandexMapProps {
-    initialCoordinates: [number, number];
-    onCoordinatesChange?: (coordinates: [number, number]) => void;
+    initialCoordinates?: [number, number];
+    onCoordinatesChange?: (coordinates?: [number, number]) => void;
 }
 
 export const YandexMap: React.FC<YandexMapProps> = ({
@@ -49,8 +49,7 @@ export const YandexMap: React.FC<YandexMapProps> = ({
                         suppressMapOpenBlock: true,
                         copyrightLogoVisible: false,
                     }}
-                    onLoad={(api) => setYamaps(api)}
-                    // instanceRef={(value) => setYamaps(value)}
+                    onLoad={setYamaps}
                 >
                     <Placemark geometry={initialCoordinates}/>
                 </Map>
