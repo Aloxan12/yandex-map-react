@@ -1,14 +1,19 @@
 import React, {useState} from "react";
 import {Map, Placemark, YMaps} from "@pbe/react-yandex-maps";
+import "./YandexMap.css";
+
+const initCoordinates = [55, 37]
 
 interface YandexMapProps {
-    initialCoordinates?: [number, number];
+    coordinates?: [number, number];
     onCoordinatesChange?: (coordinates?: [number, number]) => void;
+    setAddress?: (value: string) => void;
 }
 
 export const YandexMap: React.FC<YandexMapProps> = ({
-                                                        initialCoordinates,
+                                                        coordinates,
                                                         onCoordinatesChange,
+                                                        setAddress
                                                     }) => {
     const [yamaps, setYamaps] = useState<null | any>(null);
     const handleMapClick = async (event: any) => {
@@ -17,21 +22,24 @@ export const YandexMap: React.FC<YandexMapProps> = ({
 
         if (onCoordinatesChange) {
             onCoordinatesChange(coords);
-            const data = await yamaps
-                .geocode(coords)
-                .then((data: any) => data.geoObjects.get(0));
+            if(setAddress){
+                const data = await yamaps
+                    .geocode(coords)
+                    .then((data: any) => data.geoObjects.get(0));
 
-            const name = data?.getAddressLine(); // Адрес
-            const locality = data?.getLocalities(); // [Местоположение, город и т.д.]
-            const country = data?.getCountry(); // Страна
-            console.log("name", name);
-            console.log("locality", locality);
-            console.log("country", country);
+                const name = data?.getAddressLine(); // Адрес
+                const locality = data?.getLocalities(); // [Местоположение, город и т.д.]
+                const country = data?.getCountry(); // Страна
+                setAddress(name)
+                console.log("name", name);
+                console.log("locality", locality);
+                console.log("country", country);
+            }
         }
     };
 
     return (
-        <div style={{width: "100%", height: "600px"}}>
+        <div className='map-wrap'>
             <YMaps
                 query={{
                     apikey: "29294198-6cdc-4996-a870-01e89b830f3e",
@@ -43,7 +51,7 @@ export const YandexMap: React.FC<YandexMapProps> = ({
                     modules={["Placemark", "geocode"]}
                     width="100%"
                     height={600}
-                    defaultState={{center: initialCoordinates, zoom: 10}}
+                    defaultState={{center: coordinates || initCoordinates, zoom: 10}}
                     onClick={handleMapClick}
                     options={{
                         suppressMapOpenBlock: true,
@@ -51,7 +59,7 @@ export const YandexMap: React.FC<YandexMapProps> = ({
                     }}
                     onLoad={setYamaps}
                 >
-                    <Placemark geometry={initialCoordinates}/>
+                    {coordinates && <Placemark geometry={coordinates}/>}
                 </Map>
             </YMaps>
         </div>

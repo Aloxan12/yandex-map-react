@@ -1,0 +1,25 @@
+.app{
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 0 auto;
+}
+.data-wrap{
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+.choice-item{
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label{
+  font-size: 18px;
+}
+.value{
+  font-weight: 500;
+  font-size: 22px;
+}
